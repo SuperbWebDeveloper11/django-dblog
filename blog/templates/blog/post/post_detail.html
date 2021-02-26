@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- Display post.title and post.owner.username -->
+<h2>{{ post.title }} By {{ post.owner.username }} </h2>
+
+<!-- Display post body -->
+<p> {{ post.body }} </p> 
+
+<!-- Display 'Edit' and 'Delete' buttons -->
+{% if user.is_authenticated and post.owner == request.user %}
+<p>
+<a href="{% url 'blog:post_update' post.pk %}" class="btn btn-primary"> Update </a> 
+<a href="{% url 'blog:post_delete' post.pk %}" class="btn btn-danger"> Delete </a>
+</p>
+{% endif %}
+
+<hr />
+
+
+
+<!-- modal for creating, updating and deleting comments -->
+<div class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    </div>
+  </div>
+</div>
+
+<!-- we will display list_template here -->
+<div id='list-temp-place'>
+  {% include 'blog/comment/partial_comment_list.html' %}
+</div>
+
+
+{% endblock %}
+
+{% block some_jquery_code %}
+  <script src='{% static 'blog/js/jquery-crud-operations.js' %}'></script>
+{% endblock %}
+
+

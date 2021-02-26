@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- Display list of all posts -->
+{% for post in post_list %}
+<div class="card bg-light mb-3" style="max-width: 100%;">
+  <div class="card-header">{{ post.title }}</div>
+  <div class="card-body">
+    <!-- Link to display posts for specific user -->
+    <h4 class="card-title">Created By {{ post.owner.username }} </h4>
+    <p class="card-text"> {{ post.body|truncatewords_html:30 }} </p>
+    <a href="{{ post.get_absolute_url }}">Read more</a>
+  </div>
+</div>
+{% empty %}
+<p>No posts Yet</p>
+{% endfor %}
+
+
+<!-- Display pagination only if page_obj have some value -->
+{% if page_obj %}
+{% include "blog/post/pagination.html" with page=page_obj %}
+{% endif %}
+
+
+{% endblock %}

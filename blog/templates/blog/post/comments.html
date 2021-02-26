@@ -1,0 +1,34 @@
+
+<!-- Display an html form to add Comment -->
+<hr />
+{% if request.user.is_authenticated %}
+    <div>
+        <form action="{% url 'blog:add_comment' pk=post.pk %}" method="post" >
+            <p> <textarea name="body" required class='form-control' placeholder='Comment to this post'></textarea> </p>
+            {% csrf_token %}
+            <p><input type="submit" value="Add Comment" class='btn btn-success'></p>
+        </form>
+    </div>
+{% else %}
+    <p>You Could Sign Up to add comments</p>
+{% endif %}
+
+
+<!-- Display all comments -->
+<hr />
+{% if post.comments.all %}
+    <div>
+        <h2>Comments</h2>
+        <ul>
+            {% for comment in post.comments.all %}
+            <li class='comment-item'>
+                <b> {{ comment.body }} </b> - Commented By {{ comment.publisher }}
+            </li>
+            {% endfor%}
+        </ul>
+    </div>
+{% else %}
+    <p>No comment added yet</p>
+{% endif%}
+
+
