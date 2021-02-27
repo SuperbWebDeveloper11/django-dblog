@@ -9,6 +9,8 @@ from django.contrib.messages.views import SuccessMessageMixin
 # class-based generic views
 from django.views.generic import ListView, DetailView, View
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
+# import Tag model
+from taggit.models import Tag
 # import models
 from django.contrib.auth.models import User
 from ..models import Post, Comment
@@ -21,6 +23,17 @@ class PostList(ListView): # retrieve all posts
     template_name = 'blog/post/post_list.html'
     context_object_name = 'post_list'
     paginate_by = 5
+
+
+class PostListByTag(ListView): # retrieve posts filtred by tags
+    model = Post
+    template_name = 'blog/post/post_list.html'
+    context_object_name = 'post_list'
+
+    def get_queryset(self):
+        tag = get_object_or_404(Tag, pk=self.kwargs['tag_pk'])
+        post_list = Post.objects.filter(tags__in=[tag])
+        return post_list
 
 
 class PostDetail(DetailView): # retrieve post detail
@@ -38,7 +51,7 @@ class PostDetail(DetailView): # retrieve post detail
 class PostCreate(SuccessMessageMixin, LoginRequiredMixin, CreateView): # create new post 
     model = Post
     template_name = 'blog/post/post_form_create.html' 
-    fields = ['title', 'body']
+    fields = ['title', 'body', 'tags']
     success_message = "post was created successfully"
 
     def form_valid(self, form):
@@ -49,7 +62,7 @@ class PostCreate(SuccessMessageMixin, LoginRequiredMixin, CreateView): # create 
 class PostUpdate(SuccessMessageMixin, LoginRequiredMixin, UpdateView): # update post 
     model = Post
     template_name = 'blog/post/post_form_update.html' 
-    fields = ['title', 'body']
+    fields = ['title', 'body', 'tags']
     success_message = "post was updated successfully"
 
     def form_valid(self, form):

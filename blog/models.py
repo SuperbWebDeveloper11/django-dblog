@@ -1,11 +1,13 @@
 from django.db import models
 from django.urls import reverse
+from taggit.managers import TaggableManager
 
 
 class Post(models.Model):
     title = models.CharField(max_length=100)
     body = models.TextField(blank=True)
     created = models.DateTimeField(auto_now_add=True)
+    tags = TaggableManager()
     owner = models.ForeignKey('auth.User', related_name='blog_posts', on_delete=models.CASCADE)
 
     def get_absolute_url(self):

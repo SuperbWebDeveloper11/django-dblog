@@ -7,6 +7,7 @@ urlpatterns = [
 
     ####################### urls for 'posts' curd operations #######################
     path('', post_views.PostList.as_view(), name='post_list'),
+    path('tag/<int:tag_pk>/', post_views.PostListByTag.as_view(), name='post_list_by_tag'),
     path('add/', post_views.PostCreate.as_view(), name='post_add'),
     path('<int:pk>/detail/', post_views.PostDetail.as_view(), name='post_detail'),
     path('<int:pk>/update/', post_views.PostUpdate.as_view(), name='post_update'),
