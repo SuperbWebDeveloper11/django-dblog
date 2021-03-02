@@ -14,7 +14,10 @@
   <div class="card-body">
     <!-- Link to display posts for specific user -->
     <h4 class="card-title">Created By {{ post.owner.username }} </h4>
-    <p class="card-text"> {{ post.body|truncatewords_html:30 }} </p>
+    {% if post.tags.all %}
+    <p class="tags">Tags: {{ post.tags.all|join:", " }}</p>
+    {% endif %}
+    <p class="card-text"> {{ post.body|markdown|truncatewords_html:30 }} </p>
     <a href="{{ post.get_absolute_url }}">Read more</a>
   </div>
 </div>
@@ -29,6 +32,7 @@
 {% endif %}
 
 <!-- display latest posts -->
+<h3>latest posts</h3>
 {% latest_posts 3 %}
 
 {% endblock %}
