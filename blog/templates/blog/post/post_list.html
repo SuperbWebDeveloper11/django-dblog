@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
+{% load blog_tags %}
 
 {% block content %}
+
+<div>
+  <h3>There are <u>{% total_posts %}</u> post available</h3>
+</div>
 
 <!-- Display list of all posts -->
 {% for post in post_list %}
@@ -20,8 +25,10 @@
 
 <!-- Display pagination only if page_obj have some value -->
 {% if page_obj %}
-{% include "blog/post/pagination.html" with page=page_obj %}
+  {% include "blog/post/pagination.html" with page=page_obj %}
 {% endif %}
 
+<!-- display latest posts -->
+{% latest_posts 3 %}
 
 {% endblock %}
