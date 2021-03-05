@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+ 
+<h3>Shart post</h3>
+
+<form action="{% url 'blog:share_post' post.pk %}" method="post" novalidate enctype="multipart/form-data" class="uniForm">
+    {{ form|crispy }}
+    {% csrf_token %}
+    <br />
+    <p><input type="submit" value="share" class='btn btn-primary'></p>
+</form>
+
+
+
+{% endblock %}

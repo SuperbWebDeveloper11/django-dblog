@@ -3,6 +3,7 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.template.loader import render_to_string
+from django.core.mail import send_mail
 # messages framework
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
@@ -14,6 +15,7 @@ from taggit.models import Tag
 # import models
 from django.contrib.auth.models import User
 from ..models import Post, Comment
+from ..forms import SharePostForm
 
 
 ################## views for post crud operations ################## 
@@ -82,5 +84,34 @@ class PostDelete(SuccessMessageMixin, LoginRequiredMixin, DeleteView): # delete 
             return super().form_valid(form)
         else:
             return HttpResponse('you are not post owner')
+
+# share posts by email
+class SharePost(View):
+
+    def get(self, request, *args, **kwargs):
+        post = get_object_or_404(Post, pk=kwargs['post_pk'])
+        form = SharePostForm()
+        return render(request, 'blog/post/share_post.html', {'post': post, 'form': form})
+
+    def post(self, request, *args, **kwargs):
+        post = get_object_or_404(Post, pk=kwargs['post_pk'])
+        form = SharePostForm(request.POST)
+        if form.is_valid():
+            # build absolute url
+            post_url = post_url = request.build_absolute_uri(post.get_absolute_url())
+            # grab data from our form
+            cd = form.cleaned_data
+            title = cd['title']
+            comment = cd['comment'] + ' ' + post_url
+            email = request.user.email
+            destination = cd['destination']
+            # send email
+            send_mail(title, comment, email, [destination], fail_silently=False)
+            # display success message
+            messages.success(request, 'post has been shared')
+        else:
+            messages.warning(request, 'could not share post')
+
+        return render(request, 'blog/post/share_post.html', {'post': post, 'form': form})
 
 

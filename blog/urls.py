@@ -21,6 +21,9 @@ urlpatterns = [
     path('<int:post_pk>/comment/<int:pk>/update/', comment_views.CommentUpdate.as_view(), name='comment_update'),
     path('<int:post_pk>/comment/<int:pk>/delete/', comment_views.CommentDelete.as_view(), name='comment_delete'),
 
+    ####################### url to share post #######################
+    path('<int:post_pk>/share/', post_views.SharePost.as_view(), name='share_post'),
+
 ]
 
 
